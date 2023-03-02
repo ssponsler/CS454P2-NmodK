@@ -1,11 +1,13 @@
 /* 
  * Project 2
- * Dr. Ravikumar
  * Sean Sponsler Evan Walters
+ * CS 454
+ * Prof: Dr. Ravikumar
  * Date: March 5th, 2023
+ *
  * Description:	Given a postive integer N and a subset of digits from {0-9}.
  * Using a DFA outputs the smallest number divisble by N that only uses the given digits. 
- * 
+ * Repeats process until a -1 is given.
  */
 
 #include <iostream>
@@ -14,46 +16,95 @@
 #include <string>
 using namespace std;
 
-/*
-*/
-//N > 0 such that N%k = 0 and N uses only the digits from the set S. 
-//delta(i,a) = (10i+a)%N
-string FindString(int k, vector<int> S);
+// prototypes
+int delta(int i, int a, int k);
+string FindString(const int k, const vector<int> S);
+
+int main() {
+  
+    int k = 0;  // divisor
+    
+    // repeat process until -1 is entered for k
+    while (k != -1) {
+       
+        int in;
+        vector<int> S;
+        cout << "Enter integer N (-1 to quit): ";
+        cin >> k;
+
+        // use loop to obtain allowed digits, ends when -1 is given
+        if (k != -1) {
+            cout << "Enter allowed digits in ascending order (0 <= input <= 9) (-1 to exit): " << endl;
+            do {
+                cin >> in;
+                S.push_back(in);
+            } while (in != -1);
+
+            S.pop_back();
+
+            cout << "Output: " << FindString(k, S) << endl;
+        }
+    }
+   
+    return 0;
+}
+
+
+//********************************************************************************
+// Function: delta
+// In: current state, next input, divisor N
+// Return: resulting state/remainder
+// DESC: Conatenates the next input to the current state number,
+//      then modulos that with given N to find the remainder/next state
+//********************************************************************************
 int delta(int i, int a, int k) {
     return ((10 * i) + a) % k;
 }
 
 
-string FindString(int k, vector<int> S) {
+//********************************************************************************
+// Function: FindString
+// In: N for divisible number, vector of digits allowed to be used
+// Return: string of numbers / no solution 
+// DESC: Taking N and the allowed digits, uses a DFA to find the smalled number
+//      divisible by N that uses only the allowed digits.
+//********************************************************************************
+string FindString(const int k, const vector<int> S) {
+    // define some variables and parallel vectors
     string solution = "";
     int start = 0;
-    vector<int> states;
-    for (int i = 0; i < k; i++) {
-        states.push_back(i);
-    }
-    vector<int> label(k);
-    vector<bool> visited(k, false);
-    vector<int> parent(k);
-    queue<int> q;
-
-    q.push(start);
-    visited[0] = true;
     int current;
     int next;
     int found = false;
 
+    vector<int> label(k);
+    vector<bool> visited(k, false); // initialize every state to false
+    vector<int> parent(k);
+    queue<int> q;
+
+    visited[0] = true;  // set starting state as visited
+
+    q.push(start);  // put startng state in queue
+
+    // loop while queue isn't empty
     while (!q.empty()) {
+        // set current then pop from queue
         current = q.front();
-        q.pop();
+        q.pop();    
+
+        // loop for each allowed digit
         for (int i = 0; i < S.size(); i++) {
-            next = delta(current, S[i], k); //delta(i,a,k): i = state, a = symbol, k = N elements
-            if (next == 0) { //if next is accepting state
+            next = delta(current, S[i], k); //delta(i,a,k): i = state, a = symbol, k = divisor
+            
+            // if next is accepting state and current state isn't a final state
+            if (next == 0 && current != 0) { 
                 label[next] = S[i];
                 parent[next] = current;
-                found = true;
-                // visited[current] = true;
-                break;
+                found = true;   // found path for shortest string
+                break;  // get out of for loop
             }
+
+            // set it's various states, and push next onto queue
             else {
                 if (visited[next] == 0) {
                     parent[next] = current;
@@ -64,42 +115,20 @@ string FindString(int k, vector<int> S) {
             }
         }
 
-        //if (!found) {
-        //    //return no solution
-        //    return "no solution";
-        //}
-        //else use parent pointers and label to find shortest string accepted
+        // in case shortest path is found, return the corresponding string
         if (found) {
             int idx = 0;
 
+            // work backwards through parellel vectors: parent and label, until we are at starting state: 0
             do {
-                solution = to_string(label[idx]) + solution;
+                solution = to_string(label[idx]) + solution;    // concatenate new digit to left of solution
                 idx = parent[idx];
             } while (idx != 0);
 
             return solution;
         }
     }
+
+    // for case that entire DFA is searched with no found solution
     return "no solution";
-}
-
-
-
-int main() {
-    int k;
-    int in;
-    vector<int> S;
-    cout << "Enter integer N: ";
-    cin >> k;
-    cout << "Enter digits allowed (0 <= input <= 9) (-1 to exit): " << endl;
-    do {
-        cin >> in;
-        S.push_back(in);
-    } while (in != -1);
-
-    S.pop_back();
-
-    cout << FindString(k, S) << endl;
-
-    return 0;
 }
