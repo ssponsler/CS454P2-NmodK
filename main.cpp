@@ -1,3 +1,13 @@
+/* 
+ * Project 2
+ * Dr. Ravikumar
+ * Sean Sponsler Evan Walters
+ * Date: March 5th, 2023
+ * Description:	Given a postive integer N and a subset of digits from {0-9}.
+ * Using a DFA outputs the smallest number divisble by N that only uses the given digits. 
+ * 
+ */
+
 #include <iostream>
 #include <vector>
 #include <queue>
@@ -10,7 +20,7 @@ using namespace std;
 //delta(i,a) = (10i+a)%N
 string FindString(int k, vector<int> S);
 int delta(int i, int a, int k) {
-    return ((10*i)+a)%k;
+    return ((10 * i) + a) % k;
 }
 
 
@@ -25,6 +35,7 @@ string FindString(int k, vector<int> S) {
     vector<bool> visited(k, false);
     vector<int> parent(k);
     queue<int> q;
+
     q.push(start);
     visited[0] = true;
     int current;
@@ -40,7 +51,7 @@ string FindString(int k, vector<int> S) {
                 label[next] = S[i];
                 parent[next] = current;
                 found = true;
-                visited[current] = true;
+                // visited[current] = true;
                 break;
             }
             else {
@@ -52,20 +63,24 @@ string FindString(int k, vector<int> S) {
                 }
             }
         }
-    }
-    if (!found) {
-        //return no solution
-        return "no solution";   
-    }
-    //else use parent pointers and label to find shortest string accepted
-    else {
-        int idx = 0;
-        while (parent[idx] != 0) {
-            solution = to_string(label[idx]) + solution;
-            idx = parent[idx];
+
+        //if (!found) {
+        //    //return no solution
+        //    return "no solution";
+        //}
+        //else use parent pointers and label to find shortest string accepted
+        if (found) {
+            int idx = 0;
+
+            do {
+                solution = to_string(label[idx]) + solution;
+                idx = parent[idx];
+            } while (idx != 0);
+
+            return solution;
         }
     }
-    return solution;
+    return "no solution";
 }
 
 
@@ -80,8 +95,9 @@ int main() {
     do {
         cin >> in;
         S.push_back(in);
-    }
-    while (in != -1);
+    } while (in != -1);
+
+    S.pop_back();
 
     cout << FindString(k, S) << endl;
 
