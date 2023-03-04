@@ -14,6 +14,7 @@
 #include <vector>
 #include <queue>
 #include <string>
+#include <limits>
 using namespace std;
 
 // prototypes
@@ -31,16 +32,45 @@ int main() {
         vector<int> S;
         cout << "Enter integer N (-1 to quit): ";
         cin >> k;
+        while (cin.fail()) { //invalid input (not integer)
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Invalid input. Please enter an integer N (-1 to quit): ";
+            cin >> k;
+        }
 
         // use loop to obtain allowed digits, ends when -1 is given
         if (k != -1) {
             cout << "Enter allowed digits in ascending order (0 <= input <= 9) (-1 to exit): " << endl;
             do {
                 cin >> in;
+                while (cin.fail()) { //invalid input (not integer)
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    cout << "Invalid input. Enter allowed digits in ascending order (0 <= input <= 9) (-1 to exit): ";
+                    cin >> in;
+                }
+                bool duplicate = false;
+                for (int i = 0; i < S.size(); i++) {
+                    if (S[i] == in) duplicate = true;
+                }
+                while (duplicate) {
+                    cout << "Input already present in digits, please enter a unique allowed digit: ";
+                    cin >> in;
+                    while (cin.fail()) { //invalid input (not integer)
+                        cin.clear();
+                        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                        cout << "Invalid input. Enter allowed digits in ascending order (0 <= input <= 9) (-1 to exit): ";
+                        cin >> in;
+                    }
+                    duplicate = false;
+                    for (int i = 0; i < S.size(); i++) {
+                        if (S[i] == in) duplicate = true;
+                    }
+                }
                 S.push_back(in);
             } while (in != -1);
-
-            S.pop_back();
+            S.pop_back(); //remove final -1
 
             cout << "Output: " << FindString(k, S) << endl;
         }
