@@ -42,13 +42,13 @@ int main() {
 
         // use loop to obtain allowed digits, ends when -1 is given
         if (k > 0) {
-            cout << "Enter single allowed digit followed by the enter key: (0 <= input <= 9) (-1 to execute): " << endl;
+            cout << "Enter allowed digits followed by the enter key: (0 <= input <= 9) (-1 to execute): " << endl;
             do {
                 cin >> in;
                 while (cin.fail() || in < -1 || in > 9) { //invalid input (not integer)
                     cin.clear();
                     cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                    cout << "Invalid input. Enter single allowed digit followed by the enter key (0 <= input <= 9) (-1 to execute): ";
+                    cout << "Invalid input. Enter allowed digits followed by the enter key (0 <= input <= 9) (-1 to execute): ";
                     cin >> in;
                 }
                 //check if input is already in vector, function will not work if this is the case
@@ -57,12 +57,12 @@ int main() {
                     if (S[i] == in) duplicate = true;
                 }
                 while (duplicate) { //ensure the user does not continue to enter duplicate digits
-                    cout << "Input already present in digits, please enter a unique allowed digit followed by the enter key: ";
+                    cout << "Input already present in digits, please enter unique allowed digits followed by the enter key: ";
                     cin >> in;
                     while (cin.fail() || in < -1 || in > 9) { //invalid input (not integer)
                         cin.clear();
                         cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                        cout << "Invalid input. Enter single allowed digit followed by the enter key (0 <= input <= 9) (-1 to execute): ";
+                        cout << "Invalid input. Enter allowed digits followed by the enter key (0 <= input <= 9) (-1 to execute): ";
                         cin >> in;
                     }
                     duplicate = false;
