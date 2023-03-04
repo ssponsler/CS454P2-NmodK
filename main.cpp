@@ -1,4 +1,4 @@
-/* 
+/** **********************************************************************************
  * Project 2
  * Sean Sponsler Evan Walters
  * CS 454
@@ -8,7 +8,7 @@
  * Description:	Given a postive integer N and a subset of digits from {0-9}.
  * Using a DFA outputs the smallest number divisble by N that only uses the given digits. 
  * Repeats process until a -1 is given.
- */
+ *************************************************************************************/
 
 #include <iostream>
 #include <vector>
@@ -30,24 +30,25 @@ int main() {
        
         int in;
         vector<int> S;
-        cout << "Enter integer N (-1 to quit): ";
+        cout << "Enter integer N (greater than 1) (-1 to quit): ";
         cin >> k;
-        while (cin.fail() || k > 99999) { //invalid input (not integer)
+        //we are ASSUMING k is in the range 1 to 99999
+        while (cin.fail() || k == 0) { //invalid input (not integer)
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout << "Invalid input. Please enter an integer N between 1 and 99999 (-1 to quit): ";
+            cout << "Invalid input. Please enter an integer N greater than 1 (-1 to quit): ";
             cin >> k;
         }
 
         // use loop to obtain allowed digits, ends when -1 is given
         if (k > 0) {
-            cout << "Enter allowed digits in ascending order (0 <= input <= 9) (-1 to exit): " << endl;
+            cout << "Enter allowed digits in ascending order (0 <= input <= 9) (-1 to execute): " << endl;
             do {
                 cin >> in;
                 while (cin.fail() || in < -1 || in > 9) { //invalid input (not integer)
                     cin.clear();
                     cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                    cout << "Invalid input. Enter allowed digits in ascending order (0 <= input <= 9) (-1 to exit): ";
+                    cout << "Invalid input. Enter allowed digits in ascending order (0 <= input <= 9) (-1 to execute): ";
                     cin >> in;
                 }
                 //check if input is already in vector, function will not work if this is the case
@@ -61,7 +62,7 @@ int main() {
                     while (cin.fail() || in < -1 || in > 9) { //invalid input (not integer)
                         cin.clear();
                         cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                        cout << "Invalid input. Enter allowed digits in ascending order (0 <= input <= 9) (-1 to exit): ";
+                        cout << "Invalid input. Enter allowed digits in ascending order (0 <= input <= 9) (-1 to execute): ";
                         cin >> in;
                     }
                     duplicate = false;
