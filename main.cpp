@@ -23,41 +23,42 @@ string FindString(const int k, const vector<int> S);
 
 int main() {
   
-    int k = 0;  // divisor
-    
+    int k = 1;  // divisor
+
     // repeat process until -1 is entered for k
-    while (k != -1) {
+    while (k > 0) {
        
         int in;
         vector<int> S;
         cout << "Enter integer N (-1 to quit): ";
         cin >> k;
-        while (cin.fail()) { //invalid input (not integer)
+        while (cin.fail() || k > 99999) { //invalid input (not integer)
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout << "Invalid input. Please enter an integer N (-1 to quit): ";
+            cout << "Invalid input. Please enter an integer N between 1 and 99999 (-1 to quit): ";
             cin >> k;
         }
 
         // use loop to obtain allowed digits, ends when -1 is given
-        if (k != -1) {
+        if (k > 0) {
             cout << "Enter allowed digits in ascending order (0 <= input <= 9) (-1 to exit): " << endl;
             do {
                 cin >> in;
-                while (cin.fail()) { //invalid input (not integer)
+                while (cin.fail() || in < -1 || in > 9) { //invalid input (not integer)
                     cin.clear();
                     cin.ignore(numeric_limits<streamsize>::max(), '\n');
                     cout << "Invalid input. Enter allowed digits in ascending order (0 <= input <= 9) (-1 to exit): ";
                     cin >> in;
                 }
+                //check if input is already in vector, function will not work if this is the case
                 bool duplicate = false;
                 for (int i = 0; i < S.size(); i++) {
                     if (S[i] == in) duplicate = true;
                 }
-                while (duplicate) {
+                while (duplicate) { //ensure the user does not continue to enter duplicate digits
                     cout << "Input already present in digits, please enter a unique allowed digit: ";
                     cin >> in;
-                    while (cin.fail()) { //invalid input (not integer)
+                    while (cin.fail() || in < -1 || in > 9) { //invalid input (not integer)
                         cin.clear();
                         cin.ignore(numeric_limits<streamsize>::max(), '\n');
                         cout << "Invalid input. Enter allowed digits in ascending order (0 <= input <= 9) (-1 to exit): ";
@@ -71,11 +72,9 @@ int main() {
                 S.push_back(in);
             } while (in != -1);
             S.pop_back(); //remove final -1
-
             cout << "Output: " << FindString(k, S) << endl;
         }
     }
-   
     return 0;
 }
 
